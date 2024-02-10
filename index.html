@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTC/USD Prices</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="app" class="max-w-[1000px] mx-auto">
+      <h1 class="font-bold text-3xl text-center text-blue-600 my-4">
+        Cryptocurrency Data
+      </h1>
+    </div>
+    <script>
+      // Fields to display in the table
+      const fields = ["image", "symbol", "name", "summary"];
+
+      // Generate a table row for each entry in the data
+      const row = (key, value, index) => {
+        return `<tr>${fields.map((field) => cell(key, field, value)).join("")}</tr>`;
+      };
+
+      // Generate a table cell based on the property type
+      const cell = (symbol, property, value) => {
+        switch (property) {
+          case "image":
+            return `<td class="w-16 p-2 align-top border-b border-gray-200"><img class="h-full w-auto" src="${value[property]}" /></td>`;
+          case "symbol":
+            return `<td class="p-2 align-top border-b border-gray-200">${symbol}</td>`;
+          case "name":
+            return `<td class="p-2 align-top border-b border-gray-200"><a class="text-blue-400 font-bold hover:underline" href="${value["website"]}" target="_blank">${value[property]}</a></td>`;
+          default:
+            return `<td class="p-2 align-top border-b border-gray-200">${value[property]}</td>`;
+        }
+      };
+
+      // Create the table and append it to the "app" div
+      const createTable = (data) => {
+        const rows = Object.entries(data)
+          .map(([key, value], index) => row(key, value, index))
+          .join("");
+
+        const rowHead = `<tr>${fields.map((field) => `<th class="font-bold bg-gray-200">${field === "image" ? "" : field}</th>`).join("")}</tr>`;
+
+        const table = `<table class="w-full">${rowHead}${rows}</table>`;
+        document.getElementById("app").insertAdjacentHTML("beforeend", table);
+      };
+
+      // Fetch cryptocurrency data from the API and create the table
+      const url = "https://api.mtw-testnet.com/assets/all";
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => createTable(data))
+        .catch((error) => console.log(error));
+    </script>
+    <script>
+      // Custom configuration for the MTW app 
+      const mtwAppConfig = {
+        border: true, // Set app border in the MTW page
+      };
+    
+      ///////////////////////////////////////////////////////
+      // Implement these functions to use private API        
+      const sendPrivateApiRequest = async () => {
+        // Your code here: sendRequestToParent({ cat: 'getAssets' })
+      };        
+    
+      const acceptPrivateApiResponse = async (data) => {
+        // Process received data here: console.log(data)
+      };
+    
+      // Use this to send on document load
+      document.addEventListener('DOMContentLoaded', () => {
+        // Your code here: sendRequestToParent({ method: 'getAssets' })
+      });
+    </script>
+    <script src="https://morethanwallet.com/appstore/index.js"></script>
+  </body>
+</html>
